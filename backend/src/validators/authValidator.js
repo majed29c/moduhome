@@ -44,4 +44,5 @@ const ValidationSignup = [
 
 module.exports = {
   ValidationSignin,
+  ValidationSignup
 };
