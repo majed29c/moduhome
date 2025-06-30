@@ -12,7 +12,7 @@ const sendVerificationEmail = async (email,token) => {
             pass: process.env.EMAIL_PASS
         }
     });
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/api/verify-email?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -28,3 +28,4 @@ const sendVerificationEmail = async (email,token) => {
         throw new Error('Failed to send verification email');
     }
 }
+module.exports={sendVerificationEmail};

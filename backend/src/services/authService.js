@@ -1,6 +1,7 @@
 const authModel = require('../models/authModel');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
+const sendVerificationEmail = require('../utils/sendVerificationEmail').sendVerificationEmail;
 const signInService = async ({ email, password }) => {
   const data = await authModel.getDataByEmail(email.toLowerCase().trim());
 
@@ -45,11 +46,34 @@ const signUpService = async ({ userData }) => {
     }
 
     const { password, ...safeUser } = insertedUser;
+    const token = jwt.sign(
+        { email: insertedUser.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '10m' }
+      );
 
+    await sendVerificationEmail(insertedUser.email, token);
     return { message: "User created successfully", user: safeUser, status: 201 };
   } catch (error) {
     console.error("Error during signup:", error);
     throw new Error("Failed to sign up");
+  }
+};
+
+const verifyEmailService = async (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const email = decoded.email;
+
+    const result = await authModel.verifyEmailByToken(email);
+
+    if (!result) {
+      return { status: 400, message: 'Failed to verify email.' };
+    }
+
+    return { status: 200, message: 'Email verified successfully!' };
+  } catch (err) {
+    return { status: 400, message: 'Invalid or expired token.' };
   }
 };
 
@@ -58,4 +82,5 @@ const signUpService = async ({ userData }) => {
 module.exports = {
   signInService,
   signUpService,
+  verifyEmailService
 };

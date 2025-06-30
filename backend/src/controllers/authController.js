@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const supabase = require('../database/supabase');
 const signInService = require('../services/authService').signInService;
 const signUpService = require('../services/authService').signUpService;
+const verifyEmailService = require('../services/authService').verifyEmailService;
 const Signin = async (req, res) => {
    try{
       const user = await signInService(req.body);
@@ -37,4 +38,15 @@ const Signup = async (req,res)=>{
    }  
 }
 
-module.exports = { Signin, Signup };
+const verifyEmailController = async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).send('Token is missing.');
+  }
+
+  const result = await verifyEmailService(token);
+  return res.status(result.status).send(result.message);
+};
+
+module.exports = { Signin, Signup,verifyEmailController};

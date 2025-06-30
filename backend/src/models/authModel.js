@@ -36,4 +36,19 @@ const insertUser = async (userData)=>{
     throw new Error("Failed to insert user");
   }
 };
-module.exports = { getDataByEmail, insertUser };
+
+const verifyEmailByToken = async (email) => {
+  const { data, error } = await supabase
+    .from('User')
+    .update({ is_verified: true })
+    .eq('email', email)
+    .select()
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data;
+};
+module.exports = { getDataByEmail, insertUser,verifyEmailByToken };
