@@ -18,7 +18,8 @@ const signInService = async ({ email, password }) => {
     name: data.name,
     role: data.role,
   };
-};const signUpService = async ({ userData }) => {
+};
+const signUpService = async ({ userData }) => {
   try {
     const normalizedEmail = userData.email.toLowerCase().trim();
     const existing = await authModel.getDataByEmail(normalizedEmail);
@@ -28,7 +29,7 @@ const signInService = async ({ email, password }) => {
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-    const newUser = {
+    const userDetails = {
       ...userData,
       email: normalizedEmail,
       password: hashedPassword,
@@ -36,13 +37,13 @@ const signInService = async ({ email, password }) => {
       role: 'user',
       is_verified: false,
     };
+    const {confirmPassword, ...newUser} = userDetails;
 
     const insertedUser = await authModel.insertUser(newUser);
     if (!insertedUser) {
       return { message: "Failed to create user", status: 400 };
     }
 
-    // ✅ FIXED: Exclude password from returned user
     const { password, ...safeUser } = insertedUser;
 
     return { message: "User created successfully", user: safeUser, status: 201 };

@@ -19,17 +19,8 @@ const Signin = async (req, res) => {
   
 };
 const Signup = async (req,res)=>{
-   const {email, firstName, lastName, password, confirmPassword, phoneNumber} = req.body;
-   const userData = {
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      email: email.toLowerCase().trim(),
-      password: password.trim(),
-      confirmPassword: confirmPassword.trim(),
-      phoneNumber: phoneNumber.trim()
-   };
    try{
-      const data = await signUpService({userData: userData});
+      const data = await signUpService({userData: req.body});
       if(data.status && data.status === 409){
          return res.status(409).json({message: data.message});
       }

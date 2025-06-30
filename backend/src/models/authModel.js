@@ -20,12 +20,10 @@ const getDataByEmail = async (email) => {
 };
 
 const insertUser = async (userData)=>{
-  const {confirmPassword, ...userDetails} = userData; 
   try{
-    
     const { data, error } = await supabase
       .from('User')
-      .insert([userDetails])
+      .insert([userData])
       .select()
       .maybeSingle(); 
       if(error) {
