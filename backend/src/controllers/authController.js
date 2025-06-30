@@ -22,5 +22,8 @@ const Signin = async (req, res) => {
    }  
   
 };
+const Signup = (req,res,next)=>{
+   const {firstName,lastName,email,password, confirmPassword} = req.body;
+}
 
-module.exports = { Signin };
+module.exports = { Signin, Signup };
