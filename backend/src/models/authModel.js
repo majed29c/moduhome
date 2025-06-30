@@ -7,11 +7,12 @@ const getDataByEmail = async (email) => {
       .from('User') 
       .select('*')
       .eq('email', email)
-      .single();
-
-    if (error) throw error;
-
-    return data || null;
+      .maybeSingle();
+    if (error) {
+      console.error("Error fetching email:", error);
+      return null; 
+    }
+    return data ? data : null;
   } catch (error) {
     console.error("Error fetching email:", error);
     throw new Error("Failed to fetch email");
@@ -19,12 +20,14 @@ const getDataByEmail = async (email) => {
 };
 
 const insertUser = async (userData)=>{
+  const {confirmPassword, ...userDetails} = userData; 
   try{
+    
     const { data, error } = await supabase
       .from('User')
-      .insert([userData])
+      .insert([userDetails])
       .select()
-      .single();
+      .maybeSingle(); 
       if(error) {
         console.error("Error inserting user:", error);
         return null; 

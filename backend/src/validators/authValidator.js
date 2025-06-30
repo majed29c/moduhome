@@ -1,5 +1,4 @@
-const { body, validationResult } = require('express-validator');
-
+const {body,validationResult } = require('express-validator');
 const ValidationSignin = [
   body('email').isEmail().withMessage('Invalid email format'),
   body('password')
@@ -13,7 +12,6 @@ const ValidationSignin = [
     next();
   }
 ];
-const { body, validationResult } = require('express-validator');
 
 const ValidationSignup = [
   body('firstName').notEmpty().withMessage('First name is required'),
