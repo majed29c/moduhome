@@ -51,4 +51,18 @@ const verifyEmailByToken = async (email) => {
 
   return data;
 };
+const deleteUser = async (email)=>{
+  try{
+    const {data,error}= await supabase.from('User').delete().eq('email',email).select().maybeSingle();
+    if(error){
+      console.error("Error deleting user:", error);
+      return null; 
+    }
+    return data ? data : null;
+  }
+  catch(error){
+    console.error("Error during user deletion:", error);
+    throw new Error("Failed to delete user");
+  }
+}
 module.exports = { getDataByEmail, insertUser,verifyEmailByToken };

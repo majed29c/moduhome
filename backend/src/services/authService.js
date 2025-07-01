@@ -24,8 +24,11 @@ const signUpService = async ({ userData }) => {
   try {
     const normalizedEmail = userData.email.toLowerCase().trim();
     const existing = await authModel.getDataByEmail(normalizedEmail);
-    if (existing) {
-      return { message: "User already exists with this email", status: 409 };
+    if (existing && existing.is_verified==false) {
+      
+    }
+    if( existing && existing.is_verified==true) {
+      return { message: "Email already exists", status: 409 };
     }
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
